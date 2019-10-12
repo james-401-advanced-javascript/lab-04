@@ -3,7 +3,7 @@
 const fs = require('fs');
 const util = require('util');
 const uuid = require('uuid/v4');
-// const validator = require('../lib/validator.js');
+const validator = require('../lib/validator.js');
 
 const readFile = util.promisify(fs.readFile);
 const writeFile = util.promisify(fs.writeFile);
@@ -13,6 +13,7 @@ class Model {
     this.schema = schema;
     this.file = file;
     this.database = [];
+    this.id = uuid();
   }
 
   // Initialize the database
@@ -94,11 +95,12 @@ class Model {
   }
 
   // Validation
-  sanitize(item) {
+  async sanitize(item) {
     // do something to check that item is valid
     // against this.schema
+    !item ? validator.isValid(item) : undefined;
 
-    return true;
+    // return true;
   }
 }
 
