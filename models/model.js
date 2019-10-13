@@ -20,11 +20,15 @@ class Model {
   async load() {
     // read the file asynchronously and save the results in
     // contents
-    let contents = await readFile(this.file);
+    try {
+      let contents = await readFile(this.file);
 
-    // .then() (b/c of await)
-    this.database = JSON.parse(contents.toString().trim());
-    return this.database;
+      // .then() (b/c of await)
+      this.database = JSON.parse(contents.toString().trim());
+      return this.database;
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   // CRUD: create
@@ -64,16 +68,16 @@ class Model {
     // return that object
 
     let found = {};
+    console.log('KEY: ', key, 'val: ', val);
 
     // this is optional, but recommended
     // in case you forgot to load, made some
     // change and didn't update this.database, etc
     await this.load();
-
     this.database.forEach(item => {
       if (item[key] === val) found = item;
     });
-
+    console.log(found);
     return found;
   }
 
@@ -85,6 +89,13 @@ class Model {
     // [async] write data to file
     // make sure your change is in this.database
     // write this.database to file
+    // let updatedItem = {};
+    this.database.forEach(entry => {
+      if (entry.id === id) {
+        entry = { ...item };
+      }
+    });
+    return this.database;
   }
 
   // CRUD: delete
@@ -95,12 +106,16 @@ class Model {
   }
 
   // Validation
-  async sanitize(item) {
+  sanitize(item) {
     // do something to check that item is valid
     // against this.schema
-    !item ? validator.isValid(item) : undefined;
-
-    // return true;
+    let foo = validator.isValid(this.schema, item);
+    console.log('TEST: ', foo);
+    if (item) {
+      return validator.isValid(this.schema, item);
+    } else {
+      return undefined;
+    }
   }
 }
 

@@ -18,7 +18,7 @@ describe('Model', () => {
 
   // How might we repeat this to check on types?
   it('sanitize() returns undefined with missing requirements', async () => {
-    await expect(people.sanitize()).toBe(undefined);
+    expect(people.sanitize()).toBe(undefined);
   });
 
   it('can create', async () => {

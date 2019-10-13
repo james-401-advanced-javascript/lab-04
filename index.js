@@ -24,20 +24,21 @@ async function createPerson(person) {
   // In order to create a new person
   // check if their team exists
   // if not, create a new team
-  people.create();
-  teams.create();
+  people.read(person);
+  people.create(person);
   // set this new person's team equal to the new
   // team id created
   // finaly, create this person
 
   let team = await findTeam(person.team);
 
+  //   teams.create();
   if (!team.id) {
     // should we first validate that:
     // person.team exists
     // person.team is NOT a uuid
     if (person.team) {
-      if (uuidValidate.isUUID(person.team)) {
+      if (uuidValidate(person.team)) {
         console.error('Person.team cannot be UUID');
       } else if (Validator.isString(person.team)) {
         team = await teams.create({ name: person.team });
@@ -65,7 +66,7 @@ async function findTeam(val) {
   let result = {};
 
   if (Validator.isString(val)) result = await teams.read('name', val);
-  else if (uuidValidate.isUUID(val)) result = await teams.read('id', val);
+  else if (uuidValidate(val)) result = await teams.read('id', val);
 
   return result;
 }
@@ -83,7 +84,7 @@ async function readPerson(person) {
   let result = {};
 
   if (person.id) {
-    if (uuidValidate.isUUID(person.id)) {
+    if (uuidValidate(person.id)) {
       result = await people.read('id', person.id);
     }
   }
