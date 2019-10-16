@@ -1,5 +1,3 @@
-const Model = require('../models/model.js');
-const Teams = require('../models/teams.js');
 const People = require('../models/people.js');
 // const Validator = require('../lib/validator');
 
@@ -9,12 +7,7 @@ describe('Model', () => {
     lastName: 'Smalls',
     team: 'Yellow Rhino',
   };
-  let testTeam = {
-    id: '89a692cd-65a2-4036-8e5a-40191582ca2f',
-    name: 'Orange Rabbit',
-  };
   let people = new People(testPerson);
-  let teams = new Teams(testTeam);
 
   // How might we repeat this to check on types?
   it('sanitize() returns undefined with missing requirements', async () => {
@@ -26,7 +19,7 @@ describe('Model', () => {
   });
 
   it('can read', async () => {
-    await expect(teams.create(testTeam)).toBeTruthy();
+    await expect(people.create(testPerson)).toBeTruthy();
   });
 
   it('can update', async () => {

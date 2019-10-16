@@ -42,7 +42,7 @@ class Model {
     // ... is the spread operator
     // it expands the contents of the variable so that
     // you can copy it into another object/array
-
+    console.log('TEEEEEEAM: ', item);
     let record = { id: uuid(), ...item };
     let isValid = this.sanitize(item);
 

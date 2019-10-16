@@ -43,7 +43,6 @@ async function createPerson(person) {
       } else if (Validator.isString(person.team)) {
         team = await teams.create({ name: person.team });
       }
-
       // create the team
       // get that new id
       // create person

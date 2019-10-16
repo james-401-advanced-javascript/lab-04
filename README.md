@@ -16,19 +16,25 @@
 
 ### Modules
 
-#### `callbacks.js`
+#### `model.js`
 
-#### `promises.js`
+#### `people.js`
 
-#### `async-await.js`
+#### `teams.js`
+
+#### `validator.js`
 
 ##### Exported Values and Methods
 
-###### `readCallback`
+###### `create`
 
-###### `readPromise`
+###### `read`
 
-###### `readAsync`
+###### `update`
+
+###### `delete`
+
+###### `sanitize`
 
 ### Setup
 
@@ -50,4 +56,4 @@
 
 #### UML
 
-![UML](./images/lab-03.jpg)
+![UML](./images/lab-04.jpg)
