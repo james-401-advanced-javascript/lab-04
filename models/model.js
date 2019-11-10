@@ -71,9 +71,12 @@ class Model {
     // this is optional, but recommended
     // in case you forgot to load, made some
     // change and didn't update this.database, etc
-    await this.load();
+    // await this.load();
+    if (!key && !val) {
+      return this.database;
+    }
     this.database.forEach(item => {
-      if (item[key] === val) found = item;
+      if (item[key] === val) found = { ...item };
     });
     return found;
   }

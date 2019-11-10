@@ -71,14 +71,14 @@ async function readPerson(person) {
   // search
   // go through and read the people database
   // find people that match whatever params this function has
-  let result = {};
+  let foundPerson = await people.read(person);
 
   if (person.id) {
     if (uuidValidate(person.id)) {
-      result = await people.read('id', person.id);
+      foundPerson = await people.read('id', person.id);
     }
   }
-  return result;
+  return foundPerson;
 }
 
 /**
@@ -139,6 +139,8 @@ async function printTeams() {
   // for each team
   // print the name
   // print the members of that team
+  let allTeams = await teams.read();
+  console.log('ALL TEAMS: ', allTeams);
 }
 
 /**
@@ -147,7 +149,7 @@ async function printTeams() {
  */
 async function runOperations() {
   await loadData();
-  await deletePerson({ firstName: 'Sarah' });
+  await printTeams();
 }
 
 runOperations();
