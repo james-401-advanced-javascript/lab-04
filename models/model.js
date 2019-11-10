@@ -42,7 +42,6 @@ class Model {
     // ... is the spread operator
     // it expands the contents of the variable so that
     // you can copy it into another object/array
-    console.log('TEEEEEEAM: ', item);
     let record = { id: uuid(), ...item };
     let isValid = this.sanitize(item);
 
@@ -68,7 +67,6 @@ class Model {
     // return that object
 
     let found = {};
-    console.log('KEY: ', key, 'val: ', val);
 
     // this is optional, but recommended
     // in case you forgot to load, made some
@@ -77,7 +75,6 @@ class Model {
     this.database.forEach(item => {
       if (item[key] === val) found = item;
     });
-    console.log(found);
     return found;
   }
 
@@ -89,13 +86,17 @@ class Model {
     // [async] write data to file
     // make sure your change is in this.database
     // write this.database to file
-    // let updatedItem = {};
     this.database.forEach(entry => {
       if (entry.id === id) {
-        entry = { ...item };
+        // Update object properties using Object.assign()
+        // Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
+        Object.assign(entry, item);
+        console.log('ENTRY: ', entry);
+        console.log('id: ', entry.id);
       }
     });
-    return this.database;
+    await writeFile(this.file, JSON.stringify(this.database));
+    // console.log('DB: ', this.database);
   }
 
   // CRUD: delete
@@ -103,14 +104,15 @@ class Model {
     // find this.database object where object.id === id (forEach??)
     // remove that object (map??)
     // [async] write the new (smaller) this.database to the file
+    this.database = this.database.filter(entry => entry.id !== id);
+    await writeFile(this.file, JSON.stringify(this.database));
+    return this.database;
   }
 
   // Validation
   sanitize(item) {
     // do something to check that item is valid
     // against this.schema
-    let foo = validator.isValid(this.schema, item);
-    console.log('TEST: ', foo);
     if (item) {
       return validator.isValid(this.schema, item);
     } else {

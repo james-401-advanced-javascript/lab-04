@@ -24,30 +24,25 @@ async function createPerson(person) {
   // In order to create a new person
   // check if their team exists
   // if not, create a new team
-  people.read(person);
   people.create(person);
+  let team = await findTeam(person.team);
+
   // set this new person's team equal to the new
   // team id created
   // finaly, create this person
-
-  let team = await findTeam(person.team);
-
-  //   teams.create();
   if (!team.id) {
     // should we first validate that:
     // person.team exists
     // person.team is NOT a uuid
     if (person.team) {
-      if (uuidValidate(person.team)) {
-        console.error('Person.team cannot be UUID');
-      } else if (Validator.isString(person.team)) {
+      if (Validator.isString(person.team)) {
         team = await teams.create({ name: person.team });
       }
-      // create the team
-      // get that new id
-      // create person
     }
 
+    // create the team
+    // get that new id
+    // create person
     return await people.create({ ...person, team: team.id });
   }
 }
@@ -103,6 +98,24 @@ async function updatePerson(id, newPersonData) {
   // if they did
   // you need to verify the team they are now in exists
   // and you need to verify the team they left still has some people
+  let person = {};
+  if (uuidValidate(id)) {
+    person = await people.read('id', id);
+  }
+  console.log('FOUND PERSON: ', person);
+  let team = await findTeam(person.team);
+
+  if (!team.id) {
+    // should we first validate that:
+    // person.team exists
+    // person.team is NOT a uuid
+    if (person.team) {
+      if (Validator.isString(person.team)) {
+        team = await teams.create({ name: person.team });
+      }
+    }
+  }
+  return await people.update(person.id, { ...newPersonData });
 }
 
 /**
@@ -133,10 +146,8 @@ async function printTeams() {
  */
 async function runOperations() {
   await loadData();
-  await createPerson({
-    firstName: 'Sarah',
-    lastName: 'Smalls',
-    team: 'Yellow Rhino',
+  await updatePerson('8c769e7c-04bb-472b-9f94-33eae8976600', {
+    firstName: 'Biggie',
   });
 }
 
