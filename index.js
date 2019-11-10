@@ -122,11 +122,11 @@ async function deletePerson(obj) {
   // if you delete a person and their team
   // no longer has people
   // you should delete the team!
-  let person = await people.read('firstName', obj.firstName);
+  let person = await people.read({ ...obj });
 
   let team = person.team;
   // delete person from db
-  return await people.delete(person.id);
+  await people.delete(person.id);
   // if no one else left on team, remove team
 }
 
@@ -147,11 +147,7 @@ async function printTeams() {
  */
 async function runOperations() {
   await loadData();
-  await createPerson({
-    firstName: 'Chingalo',
-    lastName: 'Madre',
-    team: 'LaFlama Blancas',
-  });
+  await deletePerson({ firstName: 'Sarah' });
 }
 
 runOperations();
