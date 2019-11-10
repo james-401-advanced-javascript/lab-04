@@ -95,8 +95,8 @@ class Model {
         console.log('id: ', entry.id);
       }
     });
+    // save changes in target file, using node
     await writeFile(this.file, JSON.stringify(this.database));
-    // console.log('DB: ', this.database);
   }
 
   // CRUD: delete

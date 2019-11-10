@@ -24,9 +24,7 @@ async function createPerson(person) {
   // In order to create a new person
   // check if their team exists
   // if not, create a new team
-  people.create(person);
   let team = await findTeam(person.team);
-
   // set this new person's team equal to the new
   // team id created
   // finaly, create this person
@@ -36,15 +34,14 @@ async function createPerson(person) {
     // person.team is NOT a uuid
     if (person.team) {
       if (Validator.isString(person.team)) {
+        // create the team
         team = await teams.create({ name: person.team });
       }
     }
-
-    // create the team
-    // get that new id
-    // create person
-    return await people.create({ ...person, team: team.id });
   }
+  // get that new id
+  // create person
+  return await people.create({ ...person, team: team.id });
 }
 
 /**
@@ -73,8 +70,7 @@ async function findTeam(val) {
 async function readPerson(person) {
   // search
   // go through and read the people database
-  // find people that match whatever params this function
-  // has
+  // find people that match whatever params this function has
   let result = {};
 
   if (person.id) {
@@ -102,7 +98,6 @@ async function updatePerson(id, newPersonData) {
   if (uuidValidate(id)) {
     person = await people.read('id', id);
   }
-  console.log('FOUND PERSON: ', person);
   let team = await findTeam(person.team);
 
   if (!team.id) {
@@ -123,10 +118,16 @@ async function updatePerson(id, newPersonData) {
  * @param {object} person
  * @function deletePerson
  */
-async function deletePerson() {
+async function deletePerson(obj) {
   // if you delete a person and their team
   // no longer has people
   // you should delete the team!
+  let person = await people.read('firstName', obj.firstName);
+
+  let team = person.team;
+  // delete person from db
+  return await people.delete(person.id);
+  // if no one else left on team, remove team
 }
 
 /**
@@ -146,8 +147,10 @@ async function printTeams() {
  */
 async function runOperations() {
   await loadData();
-  await updatePerson('8c769e7c-04bb-472b-9f94-33eae8976600', {
-    firstName: 'Biggie',
+  await createPerson({
+    firstName: 'Chingalo',
+    lastName: 'Madre',
+    team: 'LaFlama Blancas',
   });
 }
 
