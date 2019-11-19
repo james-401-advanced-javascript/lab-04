@@ -51,7 +51,7 @@ class Model {
       this.database.push(record);
 
       // write my changed database back to the file
-      await writeFile(this.file, JSON.stringify(this.database));
+      await writeFile(JSON.stringify(this.file), JSON.stringify(this.database));
 
       return record;
     }
@@ -78,7 +78,8 @@ class Model {
     this.database.forEach(item => {
       if (item[key] === val) found = { ...item };
     });
-    return found;
+    if (Object.keys(found).length <= 0) return 'Item not found!';
+    else return found;
   }
 
   // CRUD: update - you usually only update something that exists
@@ -94,12 +95,10 @@ class Model {
         // Update object properties using Object.assign()
         // Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
         Object.assign(entry, item);
-        console.log('ENTRY: ', entry);
-        console.log('id: ', entry.id);
       }
     });
     // save changes in target file, using node
-    await writeFile(this.file, JSON.stringify(this.database));
+    await writeFile(JSON.stringify(this.file), JSON.stringify(this.database));
   }
 
   // CRUD: delete
@@ -107,8 +106,8 @@ class Model {
     // find this.database object where object.id === id (forEach??)
     // remove that object (map??)
     // [async] write the new (smaller) this.database to the file
-    this.database = this.database.filter(entry => entry.id !== id);
-    await writeFile(this.file, JSON.stringify(this.database));
+    this.database = await this.database.filter(entry => entry.id !== id);
+    await writeFile(JSON.stringify(this.file), JSON.stringify(this.database));
     return this.database;
   }
 
@@ -117,7 +116,8 @@ class Model {
     // do something to check that item is valid
     // against this.schema
     if (item) {
-      return validator.isValid(this.schema, item);
+      if (validator.isCorrectType(item, { type: 'object' }))
+        return validator.isValid(this.schema, item);
     } else {
       return undefined;
     }

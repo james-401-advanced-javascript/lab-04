@@ -140,7 +140,7 @@ async function printTeams() {
   // print the name
   // print the members of that team
   let allTeams = await teams.read();
-  console.log('ALL TEAMS: ', allTeams);
+  return allTeams;
 }
 
 /**
