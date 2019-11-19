@@ -13,6 +13,8 @@ let teams = new Teams(process.argv.slice(3)[0]);
 async function loadData() {
   let peopleData = await people.load();
   let teamData = await teams.load();
+  if (!(peopleData && teamData))
+    console.log('something went wrong loading data');
 }
 
 /**
@@ -125,6 +127,9 @@ async function deletePerson(obj) {
   let person = await people.read({ ...obj });
 
   let team = person.team;
+  let peopleDB = await people.read();
+  let filteredTeams = peopleDB.filter(individual => individual.team === team);
+  if (filteredTeams.length <= 0) await teams.delete(team.id);
   // delete person from db
   await people.delete(person.id);
   // if no one else left on team, remove team
@@ -153,3 +158,6 @@ async function runOperations() {
 }
 
 runOperations();
+
+if (!(readPerson || createPerson || updatePerson || deletePerson))
+  console.log('no people data');
